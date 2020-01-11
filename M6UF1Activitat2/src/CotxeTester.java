@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CotxeTester {
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, ClassNotFoundException {
 		
-		Cotxe cotxe;
+		
 		boolean sortir = true;
 		
 		String marca;
@@ -28,9 +28,11 @@ public class CotxeTester {
 			
 			System.out.println("Introdueix 1, 2 o 3:");
 			int opcio = sc.nextInt();
-			
+			//OPCIO1
 			if(opcio==1) { //OPCIO 1 Escriu arxiu
-								
+				
+				Cotxe cotxe;
+				
 				FileOutputStream fileout = new FileOutputStream(fitxer, true);
 				ObjectOutputStream dataOutCotxe = new ObjectOutputStream(fileout);
 				
@@ -49,27 +51,11 @@ public class CotxeTester {
 				matricula = sc.nextLine();
 												
 				cotxe = new Cotxe(marca, model, any, matricula);
-				
-				ArrayList llistaCotxe = new ArrayList(); 
-				
-				
-				
-				//List list = new ArrayList();
-						
-				/*for(int i=0; i<llistaCotxe.length; i++){
-					dataOutCotxe.writeUTF(llistaMarca[i]);
-					dataOutCotxe.writeUTF(llistaModel[i]);
-					dataOutCotxe.writeInt(llistaAny[i]);
-					dataOutCotxe.writeUTF(llistaMatricula[i]);
-				}*/
-				
-				for (int i=0; i < llistaCotxe.size(); i++) {
-					
-					dataOutCotxe.writeObject(cotxe);
-				}
+
 								
 				dataOutCotxe.close();
 				
+			//OPCIO 2	
 			} else if (opcio == 2) { //OPCIO 2 Llegeix arxiu
 				
 				System.out.println("INTRODUEIX L'OPCIO 1 o 2: ");
@@ -77,37 +63,34 @@ public class CotxeTester {
 				System.out.println("OPCIO 2 ----- SELECCIONA EL CAMP PER MOSTRAR ELS COTXES");
 				int opcio2 = sc.nextInt();
 				
-				if(opcio2 == 1){ //OPCIO 2.1 Llegeix tot l'arxiu i el mostra
+				FileInputStream filein = new FileInputStream(fitxer);
+				ObjectInputStream dataInCotxe = new ObjectInputStream(filein);
 				
-					FileInputStream filein = new FileInputStream(fitxer);
-					DataInputStream dataInCotxe = new DataInputStream(filein);
+				//OPCIO 2.1
+				if(opcio2 == 1){ //OPCIO 2.1 Llegeix tot l'arxiu i el mostra
 					
-					try {
+					Cotxe cotxe;
+				
+					try {	
 						while(true) {
-							marca = dataInCotxe.readUTF();
-							model = dataInCotxe.readUTF();
-							any = dataInCotxe.readInt();
-							matricula = dataInCotxe.readUTF();
-							
-							System.out.println("Marca    :" + marca);
-							System.out.println("Model    :" + model);
-							System.out.println("Any:     :" + any);
-							System.out.println("Matricula:" + matricula);
-							System.out.println();
+							cotxe = (Cotxe) dataInCotxe.readObject();
+							System.out.println("Marca: " + cotxe.getMarca() + " Model: " + cotxe.getModel() + " Any: " + cotxe.getAny() + " Matricula: " + cotxe.getMatricula());;
 						}
-					} catch (EOFException eo){}
-					
-					dataInCotxe.close();
-					
-				} else if (opcio2 == 2){ //OPCIO 2.2 Ll
+						
+					} catch(EOFException eo) {
+						
+					}
+				dataInCotxe.close();
+				
+				//OPCIO 2.1		
+				} else if (opcio2 == 2){ //OPCIO 2.2 Llegir fitxer per camp
 					System.out.println("Introdueix un camp per buscar");
-					
-					
-					
+											
 				} else {
 					System.out.println("No ha introduit una opcio correcta");
 				}
 				
+			//OPCIO 3	
 			} else if (opcio == 3) { //OPCIO 3 Surt del programa
 				sortir = false;
 				System.out.println("Programa tancat");
