@@ -3,13 +3,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class EscriuFitxerObject {
+public class CotxeTester {
 	public static void main(String[] args) throws IOException {
-		
-		//1 Mostrar tots els cotxes.
-		//2  
-		//3 Introduir cotxes d'un en un.
-		//4
 		
 		Cotxe cotxe;
 		boolean sortir = true;
