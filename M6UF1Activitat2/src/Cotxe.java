@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public class Cotxe {
+public class Cotxe implements Serializable {
 
 	//Atributs
 	private String marca;

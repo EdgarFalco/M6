@@ -8,19 +8,14 @@ public class CotxeTester {
 		
 		
 		boolean sortir = true;
-		
-		String marca;
-		String model;
-		int any;
-		String matricula;
-		
+				
 		String path = "./src/cotxes.txt";
+		File fitxer = new File(path);
 		
 		Scanner sc = new Scanner(System.in);
-		
-		File fitxer = new File(path);
-				
+						
 		while (sortir) {
+			//MENU D'OPCIONS
 			System.out.println("INTRODUIR O MOSTRAR COTXES");
 			System.out.println("OPCIO 1 --- Introduir cotxe");
 			System.out.println("OPCIO 2 --- Mostrar cotxes");
@@ -28,32 +23,34 @@ public class CotxeTester {
 			
 			System.out.println("Introdueix 1, 2 o 3:");
 			int opcio = sc.nextInt();
+			
 			//OPCIO1
 			if(opcio==1) { //OPCIO 1 Escriu arxiu
 								
 				FileOutputStream fileout = new FileOutputStream(fitxer, true);
 				ObjectOutputStream dataOutCotxe = new ObjectOutputStream(fileout);
 				
+				
 				System.out.println("Introdueix la marca d'un cotxe: ");
 				sc.nextLine();
-				marca = sc.nextLine();
+				String marca = sc.nextLine();
 								
 				System.out.println("Introdueix el model: ");
-				model = sc.nextLine();
+				String model = sc.nextLine();
 				
 				System.out.println("Introdueix l'any: ");
-				any = sc.nextInt();
+				int any = sc.nextInt();
 				
 				System.out.println("Introdueix la matricula: ");
 				sc.nextLine();
-				matricula = sc.nextLine();
+				String matricula = sc.nextLine();
 												
 				Cotxe cotxe = new Cotxe(marca, model, any, matricula);
 				
 				dataOutCotxe.writeObject(cotxe);
 
-								
-				dataOutCotxe.close();
+				dataOutCotxe.close();				
+				
 				
 			//OPCIO 2	
 			} else if (opcio == 2) { //OPCIO 2 Llegeix arxiu
