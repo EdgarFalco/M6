@@ -30,9 +30,7 @@ public class CotxeTester {
 			int opcio = sc.nextInt();
 			//OPCIO1
 			if(opcio==1) { //OPCIO 1 Escriu arxiu
-				
-				Cotxe cotxe;
-				
+								
 				FileOutputStream fileout = new FileOutputStream(fitxer, true);
 				ObjectOutputStream dataOutCotxe = new ObjectOutputStream(fileout);
 				
@@ -50,7 +48,9 @@ public class CotxeTester {
 				sc.nextLine();
 				matricula = sc.nextLine();
 												
-				cotxe = new Cotxe(marca, model, any, matricula);
+				Cotxe cotxe = new Cotxe(marca, model, any, matricula);
+				
+				dataOutCotxe.writeObject(cotxe);
 
 								
 				dataOutCotxe.close();
