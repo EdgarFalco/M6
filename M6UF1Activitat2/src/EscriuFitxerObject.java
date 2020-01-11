@@ -1,11 +1,17 @@
+import java.awt.List;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class EscriuFitxerObject {
 	public static void main(String[] args) throws IOException {
 		
+		//1 Mostrar tots els cotxes.
+		//2  
+		//3 Introduir cotxes d'un en un.
+		//4
+		
 		Cotxe cotxe;
-		int numeroCotxe = 1;
 		boolean sortir = true;
 		
 		String marca;
@@ -18,9 +24,7 @@ public class EscriuFitxerObject {
 		Scanner sc = new Scanner(System.in);
 		
 		File fitxer = new File(path);
-		FileOutputStream fileout = new FileOutputStream(fitxer);
-		DataOutputStream dataOuComarq = new DataOutputStream(fileout);
-		
+				
 		while (sortir) {
 			System.out.println("INTRODUIR O MOSTRAR COTXES");
 			System.out.println("OPCIO 1 --- Introduir cotxe");
@@ -31,6 +35,9 @@ public class EscriuFitxerObject {
 			int opcio = sc.nextInt();
 			
 			if(opcio==1) { //OPCIO 1 Escriu arxiu
+								
+				FileOutputStream fileout = new FileOutputStream(fitxer, true);
+				ObjectOutputStream dataOutCotxe = new ObjectOutputStream(fileout);
 				
 				System.out.println("Introdueix la marca d'un cotxe: ");
 				sc.nextLine();
@@ -48,19 +55,63 @@ public class EscriuFitxerObject {
 												
 				cotxe = new Cotxe(marca, model, any, matricula);
 				
-				//Cotxe cotxe[] = {cotxe}; 
-				//String comarq[] = {"Baix Camp", "Segarra", "Bages", "Priorat", "Terra Alta", "Montsià"};
-				//int poblacio[] = {190249, 22713, 184403, 9550, 12119, 69613};
-						
-				//for(int i=0; i<comarq.length; i++){
-					//dataOuComarq.writeUTF(comarq[i]);
-					//dataOuComarq.writeInt(poblacio[i]);
+				ArrayList llistaCotxe = new ArrayList(); 
 				
-				//}
-				//dataOuComarq.close();
+				
+				
+				//List list = new ArrayList();
+						
+				/*for(int i=0; i<llistaCotxe.length; i++){
+					dataOutCotxe.writeUTF(llistaMarca[i]);
+					dataOutCotxe.writeUTF(llistaModel[i]);
+					dataOutCotxe.writeInt(llistaAny[i]);
+					dataOutCotxe.writeUTF(llistaMatricula[i]);
+				}*/
+				
+				for (int i=0; i < llistaCotxe.size(); i++) {
+					
+					dataOutCotxe.writeObject(cotxe);
+				}
+								
+				dataOutCotxe.close();
+				
 			} else if (opcio == 2) { //OPCIO 2 Llegeix arxiu
 				
+				System.out.println("INTRODUEIX L'OPCIO 1 o 2: ");
+				System.out.println("OPCIO 1 ----- MOSTRA TOTS ELS COTXES");
+				System.out.println("OPCIO 2 ----- SELECCIONA EL CAMP PER MOSTRAR ELS COTXES");
+				int opcio2 = sc.nextInt();
 				
+				if(opcio2 == 1){ //OPCIO 2.1 Llegeix tot l'arxiu i el mostra
+				
+					FileInputStream filein = new FileInputStream(fitxer);
+					DataInputStream dataInCotxe = new DataInputStream(filein);
+					
+					try {
+						while(true) {
+							marca = dataInCotxe.readUTF();
+							model = dataInCotxe.readUTF();
+							any = dataInCotxe.readInt();
+							matricula = dataInCotxe.readUTF();
+							
+							System.out.println("Marca    :" + marca);
+							System.out.println("Model    :" + model);
+							System.out.println("Any:     :" + any);
+							System.out.println("Matricula:" + matricula);
+							System.out.println();
+						}
+					} catch (EOFException eo){}
+					
+					dataInCotxe.close();
+					
+				} else if (opcio2 == 2){ //OPCIO 2.2 Ll
+					System.out.println("Introdueix un camp per buscar");
+					
+					
+					
+				} else {
+					System.out.println("No ha introduit una opcio correcta");
+				}
 				
 			} else if (opcio == 3) { //OPCIO 3 Surt del programa
 				sortir = false;

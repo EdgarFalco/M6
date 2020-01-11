@@ -2,10 +2,10 @@
 public class Cotxe {
 
 	//Atributs
-	String marca;
-	String model;
-	int any;
-	String matricula;
+	private String marca;
+	private String model;
+	private int any;
+	private String matricula;
 	
 	//CONSTRUCTOR
 	public Cotxe(String marca, String model, int any, String matricula) {
