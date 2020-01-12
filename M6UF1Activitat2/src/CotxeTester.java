@@ -6,10 +6,14 @@ import java.util.Scanner;
 public class CotxeTester {
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 		
-		
+		String marca;
+		String model;
+		int any;
+		String matricula;
+			
 		boolean sortir = true;
 				
-		String path = "./src/cotxes.txt";
+		String path = "cotxes.txt";
 		File fitxer = new File(path);
 		
 		Scanner sc = new Scanner(System.in);
@@ -29,21 +33,20 @@ public class CotxeTester {
 								
 				FileOutputStream fileout = new FileOutputStream(fitxer, true);
 				ObjectOutputStream dataOutCotxe = new ObjectOutputStream(fileout);
-				
-				
+								
 				System.out.println("Introdueix la marca d'un cotxe: ");
 				sc.nextLine();
-				String marca = sc.nextLine();
+				marca = sc.nextLine();
 								
 				System.out.println("Introdueix el model: ");
-				String model = sc.nextLine();
+				model = sc.nextLine();
 				
 				System.out.println("Introdueix l'any: ");
-				int any = sc.nextInt();
+				any = sc.nextInt();
 				
 				System.out.println("Introdueix la matricula: ");
 				sc.nextLine();
-				String matricula = sc.nextLine();
+				matricula = sc.nextLine();
 												
 				Cotxe cotxe = new Cotxe(marca, model, any, matricula);
 				
@@ -60,18 +63,18 @@ public class CotxeTester {
 				System.out.println("OPCIO 2 ----- SELECCIONA EL CAMP PER MOSTRAR ELS COTXES");
 				int opcio2 = sc.nextInt();
 				
+				fitxer = new File(path);
+				
 				FileInputStream filein = new FileInputStream(fitxer);
 				ObjectInputStream dataInCotxe = new ObjectInputStream(filein);
 				
 				//OPCIO 2.1
 				if(opcio2 == 1){ //OPCIO 2.1 Llegeix tot l'arxiu i el mostra
-					
-					Cotxe cotxe;
-				
+					Cotxe cotxe;				
 					try {	
 						while(true) {
 							cotxe = (Cotxe) dataInCotxe.readObject();
-							System.out.println("Marca: " + cotxe.getMarca() + " Model: " + cotxe.getModel() + " Any: " + cotxe.getAny() + " Matricula: " + cotxe.getMatricula());;
+							System.out.println("Marca: " + cotxe.getMarca() + " Model: " + cotxe.getModel() + " Any: " + cotxe.getAny() + " Matricula: " + cotxe.getMatricula());
 						}
 						
 					} catch(EOFException eo) {
@@ -79,12 +82,75 @@ public class CotxeTester {
 					}
 				dataInCotxe.close();
 				
-				//OPCIO 2.1		
-				} else if (opcio2 == 2){ //OPCIO 2.2 Llegir fitxer per camp
+				//OPCIO 2.1	LLEGIR PER CAMPS
+				} else if (opcio2 == 2){ 
 					System.out.println("Introdueix un camp per buscar");
-											
+					System.out.println("1- Marca: ");
+					System.out.println("2- Model: ");
+					System.out.println("3- Any: ");
+					System.out.println("4- Matricula: ");
+					System.out.println("Introdueix 1, 2, 3 o 4");
+					int camp = sc.nextInt();
+					
+					sc.nextLine();
+					
+					int enterAny = 0;
+					String lletres = "";
+					
+					if(camp == 3 ) {
+						System.out.println("Escriu un camp: ");
+						enterAny = sc.nextInt(); 
+						
+					} else if(camp == 1 || camp ==2 || camp ==4) {
+						System.out.println("Escriu un camp:");
+						lletres = sc.nextLine();
+					}
+										
+					try {
+						while(true) {
+							Cotxe cotxe = (Cotxe) dataInCotxe.readObject();
+														
+							//CAMP MARCA
+							if(camp == 1) {
+								
+								if(cotxe.getMarca().equalsIgnoreCase(lletres)) {
+									System.out.println("Marca: " + cotxe.getMarca() + " Model: " + cotxe.getModel() + " Any: " + cotxe.getAny() + " Matricula: " + cotxe.getMatricula());
+								}
+															
+							//CAMP MODEL
+							} else if (camp == 2) {
+								
+								if(cotxe.getModel().equalsIgnoreCase(lletres)) {
+									System.out.println("Marca: " + cotxe.getMarca() + " Model: " + cotxe.getModel() + " Any: " + cotxe.getAny() + " Matricula: " + cotxe.getMatricula());
+								}
+								
+							//CAMP ANY
+							} else if (camp == 3) {
+								
+								if(cotxe.getAny() == enterAny) {
+									System.out.println("Marca: " + cotxe.getMarca() + " Model: " + cotxe.getModel() + " Any: " + cotxe.getAny() + " Matricula: " + cotxe.getMatricula());
+								}	
+							//CAMP MATRICULA
+							} else if (camp == 4) {
+								
+								if(cotxe.getMatricula().equalsIgnoreCase(lletres)) {
+									System.out.println("Marca: " + cotxe.getMarca() + " Model: " + cotxe.getModel() + " Any: " + cotxe.getAny() + " Matricula: " + cotxe.getMatricula());
+								}	
+							//ALTRES	
+							} else {
+								System.out.println("No ha introduit un numero correcte");
+								System.out.println();
+							}
+							
+						}
+							
+					} catch (EOFException eo) {
+						
+					}
+					
 				} else {
 					System.out.println("No ha introduit una opcio correcta");
+					System.out.println();
 				}
 				
 			//OPCIO 3	
@@ -98,4 +164,5 @@ public class CotxeTester {
 			}
 		}
 	}
+	
 }
