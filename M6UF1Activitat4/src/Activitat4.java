@@ -36,31 +36,34 @@ public class Activitat4 {
 	//METODE
 	public static void llegirNodesXml(Element element) {
 		
-		
+		//Guardem els fills
 		NodeList nlist = element.getChildNodes();
-
+		//Recorrem els nodes fills		
 		for (int i = 0; i < nlist.getLength(); i++) {
 
-			
+			// Si es un element (mirem si es un element)
 			if (nlist.item(i).getNodeType() == Node.ELEMENT_NODE) {
 
 				Element esElement = (Element) nlist.item(i);
-				
+				// Si te el node conte algun atribut agafara l'atribut i el contingut
 				if (esElement.hasAttributes()) {
 					NamedNodeMap nodeMap = nlist.item(i).getAttributes();
-
+					
+					// Mostrem el node
 					for (int j = 0; j < nodeMap.getLength(); j++) {
 						Node node = nodeMap.item(j);
 						System.out.print(esElement.getNodeName() + ":\n	" + node.getNodeName() + ": " + node.getNodeValue());
 						llegirNodesXml(esElement);
 					}
-
+					//Si no es un atribut imprimim el node
 				} else {
+					//Imprimim el nodes
 					System.out.print(esElement.getNodeName() + ": " );
 					llegirNodesXml(esElement);	
 				}
 
 			} else {
+				// Imprimim les tabulacions i els intros i tambe el contingut dels nodes, en cas de que no sigui un element
 				System.out.print(nlist.item(i).getTextContent());
 			}
 		}
