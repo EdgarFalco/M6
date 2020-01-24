@@ -7,6 +7,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
@@ -23,8 +25,18 @@ import org.xml.sax.SAXException;
 
 public class XmlTester {
 
-	public static void main(String[] args) throws SAXException, IOException, ParserConfigurationException {
+	public static void main(String[] args) throws SAXException, IOException, ParserConfigurationException, TransformerConfigurationException, TransformerException, TransformerFactoryConfigurationError {
 		
+		// per a carregar en memòria un arxiu xml
+		File file = new File("src/alumnes.xml");
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(file);
+		
+		Element nodeArrel = doc.getDocumentElement();
+		
+		Scanner sc = new Scanner(System.in);
+						
 		boolean segueix = true;
 		
 		while(segueix){
@@ -33,16 +45,16 @@ public class XmlTester {
 			
 			if(opcio == 1){
 				//Afegeix nodes al node arrel
-				afegir();
+				afegir(sc, doc);
 				
 			} else if (opcio == 2){
-				
+				eliminar(sc, doc);
 			} else if (opcio == 3){
 				
 			} else if (opcio == 4){
-				
+				llegirNodesXml(nodeArrel);
 			}else if (opcio == 5){
-				//Surt del programa1
+				//Surt del programa
 				segueix = false;
 			}
 		}
@@ -67,14 +79,9 @@ public class XmlTester {
 	}
 	
 	//Afegeix nodes a l'arrel
-	private static void afegir() throws ParserConfigurationException,
+	private static void afegir(Scanner sc, Document doc) throws ParserConfigurationException,
 			SAXException, IOException, TransformerFactoryConfigurationError {
-		// per a carregar en memòria un arxiu xml
-		File file = new File("src/alumnes.xml");
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		Document doc = dBuilder.parse(file);
-		Scanner sc = new Scanner(System.in);
+					
 		Element nodeArrel = doc.getDocumentElement();
 		
 		try {
@@ -82,7 +89,7 @@ public class XmlTester {
 			  Element alumne = doc.createElement("alumne");
 			  nodeArrel.appendChild(alumne);
 			  			  
-			  // atriubt pel node alumne
+			  // atribut pel node alumne
 			  Attr attr = doc.createAttribute("id");
 			  
 			  System.out.println("Introdueix el valor de l'atribut id:");
@@ -91,14 +98,14 @@ public class XmlTester {
 			  attr.setValue(teclatUsuari);
 			  alumne.setAttributeNode(attr);
 			  			  			  
-			  //1 fill d'alumne
+			  //1 Nom
 			  Element nodeNom = doc.createElement("nom");
 			  System.out.println("Introdueix el valor del primer fill alumne:");
 			  teclatUsuari = sc.nextLine();
 			  nodeNom.appendChild(doc.createTextNode(teclatUsuari));
 			  alumne.appendChild(nodeNom);
 			  
-			  //2 fill d'alumne
+			  //2 Cognom1
 			  Element nodeCognom1 = doc.createElement("cognom1");
 			  
 			  System.out.println("Introdueix el valor del segon fill d'alumne: ");
@@ -106,7 +113,7 @@ public class XmlTester {
 			  nodeCognom1.appendChild(doc.createTextNode(teclatUsuari));
 			  alumne.appendChild(nodeCognom1);
 			  			  
-			  //3 fill d'alumne
+			  //3 Cognom2
 			  Element nodeCognom2 = doc.createElement("cognom2");
 			  
 			  System.out.println("Introdueix el valor del tercer fill d'alumne: ");
@@ -114,7 +121,7 @@ public class XmlTester {
 			  nodeCognom2.appendChild(doc.createTextNode(teclatUsuari));
 			  alumne.appendChild(nodeCognom2);
 			  
-			  //4 fill d'alumne
+			  //4 Nota
 			  Element nodeNota = doc.createElement("notaFinal");
 			  
 			  System.out.println("Introdueix el valor del quart fill d'alumne: ");
@@ -122,15 +129,102 @@ public class XmlTester {
 			  nodeNota.appendChild(doc.createTextNode(teclatUsuari));
 			  alumne.appendChild(nodeNota);
 			  
-			  // Finalitza la creacio del ariux XML i guarda
+			//Finalitza la creacio del arxiu XML i guarda l'arxiu
+			  guardar(sc, doc);
+			  
+		} catch(Exception e) {
+			   e.printStackTrace();
+		}
+	}
+	
+	//Finalitza la creacio del arxiu XML i guarda l'arxiu (L'usuari introdueix si o no)
+	private static void guardar(Scanner sc, Document doc )throws TransformerFactoryConfigurationError, TransformerException, TransformerConfigurationException {
+		
+		System.out.println(" --> Vols guardar: SI/NO ");
+		
+		if(sc.next().equalsIgnoreCase("si")){
+			  
 			  TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			  Transformer transformer = transformerFactory.newTransformer();
 			  DOMSource source = new DOMSource(doc);
 			  StreamResult result = new StreamResult(new File("src/alumnes.xml"));
 			  transformer.transform(source, result);
-			  
-		} catch(Exception e) {
-			   e.printStackTrace();
+		}
+	}
+	
+	//Elimina nodes de l'arrel
+	private static void eliminar(Scanner sc, Document doc) throws TransformerConfigurationException, TransformerException, TransformerFactoryConfigurationError {
+		Element element = buscarIdentificador(sc, doc);
+		//Comprova que el id no sigui null
+		if(element != null){
+			//mostra el node
+			llegirNodesXml(element);
+			//Elimina
+			element.getParentNode().removeChild(element);
+			guardar(sc, doc);
+		}
+	}
+	
+	//Busca identificador per poder agafa el id
+	private static Element buscarIdentificador(Scanner sc, Document doc){
+		
+		System.out.println("Introdueix el identificador: ");
+		int id = sc.nextInt();
+		
+		Element element = null;
+		
+		Node nodeArrel = doc.getFirstChild();
+		
+		//Agafa el nodeList del node Arrel
+		NodeList list = nodeArrel.getChildNodes();
+		//Recorre el nodeList
+		for (int i = 0; i < list.getLength(); i++) {
+		    Node node = list.item(i);
+		    
+		    if (node.getNodeType() == Node.ELEMENT_NODE) {
+		        Element element2 = (Element) node;
+		        //Mira el atribut i agafa el valor
+		        if(element2.getAttribute("id").equalsIgnoreCase(Integer.toString(id))){
+		        	element = element2;
+		        }
+		    }
+		}
+		return element;
+	}
+	
+	//Llegeix el xml
+	public static void llegirNodesXml(Element element) {
+		
+		//Guardem els fills
+		NodeList nlist = element.getChildNodes();
+		//Recorrem els nodes fills		
+		for (int i = 0; i < nlist.getLength(); i++) {
+
+			// Si es un element (mirem si es un element)
+			if (nlist.item(i).getNodeType() == Node.ELEMENT_NODE) {
+
+				Element esElement = (Element) nlist.item(i);
+				// Si te el node conte algun atribut agafara l'atribut i el contingut
+				if (esElement.hasAttributes()) {
+					NamedNodeMap nodeMap = nlist.item(i).getAttributes();
+					
+					// Mostrem el node
+					for (int j = 0; j < nodeMap.getLength(); j++) {
+						Node node = nodeMap.item(j);
+						System.out.print(esElement.getNodeName() + ":\n	" + node.getNodeName() + ": " + node.getNodeValue());
+						llegirNodesXml(esElement);
+					}
+					//Si no es un atribut imprimim el node
+				} else {
+					//Imprimim el nodes
+					System.out.print(esElement.getNodeName() + ": " );
+					llegirNodesXml(esElement);	
+				}
+
+			} else {
+				// Imprimim les tabulacions i els intros i tambe el contingut dels nodes, en cas de que no sigui un element
+				System.out.print(nlist.item(i).getTextContent());
+			}
 		}
 	}
 }
