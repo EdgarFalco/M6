@@ -22,12 +22,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 
-public class XmlTester {
+public class XmlCatalunyaHorarisTester {
 
 	public static void main(String[] args) throws SAXException, IOException, ParserConfigurationException, TransformerConfigurationException, TransformerException, TransformerFactoryConfigurationError {
 		
 		// per a carregar en memòria un arxiu xml
-		File file = new File("src/alumnes.xml");
+		File file = new File("src/horarisCatalunya.xml");
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(file);
@@ -46,13 +46,13 @@ public class XmlTester {
 				//Afegeix nodes al node arrel
 				afegir(sc, doc);
 			} else if (opcio == 2){
-				//Elimina node alumne
+				//Elimina node row
 				eliminar(sc, doc);
 			} else if (opcio == 3){
-				//Modifica node alumne
+				//Modifica node row
 				modificar(doc, sc);
 			} else if (opcio == 4){
-				//llegeix nodes
+				//llegeix row
 				llegirNodesXml(nodeArrel);
 			}else if (opcio == 5){
 				//Surt del programa
@@ -87,45 +87,45 @@ public class XmlTester {
 		
 		try {
 			  // Definim el node que contindra els elements
-			  Element alumne = doc.createElement("alumne");
+			  Element alumne = doc.createElement("row");
 			  nodeArrel.appendChild(alumne);
 			  			  
-			  // atribut pel node alumne
-			  Attr attr = doc.createAttribute("id");
+			  // atribut id
+			  Attr attr = doc.createAttribute("_id");
 			  
-			  System.out.println("Introdueix el valor de l'atribut id:");
+			  System.out.println("Introdueix el valor de l'atribut _id:");
 			  String teclatUsuari = sc.nextLine();
 			  //Afegim el valor l'atribut
 			  attr.setValue(teclatUsuari);
 			  alumne.setAttributeNode(attr);
 			  			  			  
-			  //1 Nom
-			  Element nodeNom = doc.createElement("nom");
-			  System.out.println("Introdueix el valor del primer fill alumne:");
+			  //1 Nom del festiu
+			  Element nodeNom = doc.createElement("nom_del_festiu");
+			  System.out.println("Introdueix el valor del primer fill row:");
 			  teclatUsuari = sc.nextLine();
 			  nodeNom.appendChild(doc.createTextNode(teclatUsuari));
 			  alumne.appendChild(nodeNom);
 			  
-			  //2 Cognom1
-			  Element nodeCognom1 = doc.createElement("cognom1");
+			  //Any
+			  Element nodeCognom1 = doc.createElement("any_calendari");
 			  
-			  System.out.println("Introdueix el valor del segon fill d'alumne: ");
+			  System.out.println("Introdueix el valor del segon fill row: ");
 			  teclatUsuari = sc.nextLine();
 			  nodeCognom1.appendChild(doc.createTextNode(teclatUsuari));
 			  alumne.appendChild(nodeCognom1);
 			  			  
-			  //3 Cognom2
-			  Element nodeCognom2 = doc.createElement("cognom2");
+			  //Data
+			  Element nodeCognom2 = doc.createElement("data");
 			  
-			  System.out.println("Introdueix el valor del tercer fill d'alumne: ");
+			  System.out.println("Introdueix el valor del tercer fill row ");
 			  teclatUsuari = sc.nextLine();
 			  nodeCognom2.appendChild(doc.createTextNode(teclatUsuari));
 			  alumne.appendChild(nodeCognom2);
 			  
-			  //4 Nota
-			  Element nodeNota = doc.createElement("notaFinal");
+			  //Localitzacio
+			  Element nodeNota = doc.createElement("localitzaci");
 			  
-			  System.out.println("Introdueix el valor del quart fill d'alumne: ");
+			  System.out.println("Introdueix el valor del quart fill row ");
 			  teclatUsuari = sc.nextLine();
 			  nodeNota.appendChild(doc.createTextNode(teclatUsuari));
 			  alumne.appendChild(nodeNota);
@@ -148,7 +148,7 @@ public class XmlTester {
 			  TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			  Transformer transformer = transformerFactory.newTransformer();
 			  DOMSource source = new DOMSource(doc);
-			  StreamResult result = new StreamResult(new File("src/alumnes.xml"));
+			  StreamResult result = new StreamResult(new File("src/horarisCatalunya.xml"));
 			  transformer.transform(source, result);
 		}
 	}
@@ -185,7 +185,7 @@ public class XmlTester {
 		    if (node.getNodeType() == Node.ELEMENT_NODE) {
 		        Element element2 = (Element) node;
 		        //Mira el atribut i agafa el valor
-		        if(element2.getAttribute("id").equalsIgnoreCase(Integer.toString(id))){
+		        if(element2.getAttribute("_id").equalsIgnoreCase(Integer.toString(id))){
 		        	element = element2;
 		        }
 		    }
@@ -237,32 +237,35 @@ public class XmlTester {
 		if(element != null){
 			//id
 			System.out.println("Introdueix el nou id: ");
-			int id = sc.nextInt();
+			String id = sc.nextLine();
 			//Accedim al contingut del atribut i cambiem el valor
-			element.getAttributes().getNamedItem("id").setTextContent(Integer.toString(id));
-			//nom
-			System.out.println("Introdueix el nou nom: ");
+			element.getAttributes().getNamedItem("id").setTextContent(id);
+			
+			//nom del festiu
+			System.out.println("Introdueix el nou nom del festiu: ");
 			String nombre = sc.nextLine();
 			//Accedim al contingut del node i cambiem el valor
 			element.getChildNodes().item(0).getChildNodes().item(0).setTextContent(nombre);
 			
-			//cognom1
-			System.out.println("Introdueix el nou primer cognom: ");
+			//Any
+			System.out.println("Introdueix nou any: ");
+			String nota = sc.nextLine();
+			//Accedim al contingut del node i cambiem el valor
+			element.getChildNodes().item(3).getChildNodes().item(0).setTextContent(nota);
+			
+			//Data
+			System.out.println("Introdueix la nova data: ");
 			String cognom1 = sc.nextLine();
 			//Accedim al contingut del node i cambiem el valor
 			element.getChildNodes().item(1).getChildNodes().item(0).setTextContent(cognom1);
 			
-			//cognom2
-			System.out.println("Introdueix el nou segon cognom: ");
+			//Localitzaci
+			System.out.println("Introdueix la nova localitzacio: ");
 			String cognom2 = sc.nextLine();
 			//Accedim al contingut del node i cambiem el valor
 			element.getChildNodes().item(2).getChildNodes().item(0).setTextContent(cognom2);
 			
-			//nota
-			System.out.println("Introdueix nova nota: ");
-			String nota = sc.nextLine();
-			//Accedim al contingut del node i cambiem el valor
-			element.getChildNodes().item(3).getChildNodes().item(0).setTextContent(nota);
+			
 
 			guardar(sc, doc);
 		}
